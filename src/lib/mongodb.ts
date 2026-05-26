@@ -1,40 +1,30 @@
 import { MongoClient, Db } from "mongodb";
 
+const DEFAULT_DB_NAME = "task-manager";
+
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-function getClientPromise(): Promise<MongoClient> {
-  const uri = process.env.MONGODB_URI;
+function getMongoUri(): string {
+  const uri = process.env.MONGODB_URI?.trim();
   if (!uri) {
     throw new Error("MONGODB_URI is not defined in environment variables");
   }
-
-  if (process.env.NODE_ENV === "development") {
-    if (!global._mongoClientPromise) {
-      const client = new MongoClient(uri);
-      global._mongoClientPromise = client.connect();
-    }
-    return global._mongoClientPromise;
-  }
-
-  const client = new MongoClient(uri);
-  return client.connect();
+  return uri;
 }
 
-let clientPromise: Promise<MongoClient> | null = null;
-
-function getOrCreateClient(): Promise<MongoClient> {
-  if (!clientPromise) {
-    clientPromise = getClientPromise();
+/** חיבור אחד משותף — חובה ב-Vercel (serverless) ובפיתוח */
+function getClientPromise(): Promise<MongoClient> {
+  if (!global._mongoClientPromise) {
+    const client = new MongoClient(getMongoUri());
+    global._mongoClientPromise = client.connect();
   }
-  return clientPromise;
+  return global._mongoClientPromise;
 }
-
-const DEFAULT_DB_NAME = "task-manager";
 
 export async function getDb(): Promise<Db> {
-  const client = await getOrCreateClient();
-  const dbName = process.env.MONGODB_DB_NAME || DEFAULT_DB_NAME;
+  const client = await getClientPromise();
+  const dbName = (process.env.MONGODB_DB_NAME || DEFAULT_DB_NAME).trim();
   return client.db(dbName);
 }
