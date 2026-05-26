@@ -1,0 +1,121 @@
+@use "@/styles/variables" as *;
+
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.trigger {
+  width: 100%;
+  max-width: 280px;
+  text-align: right;
+  padding: 0.6rem 0.85rem;
+  background: $bg-secondary;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  color: $text-primary;
+  font-size: 0.9rem;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:hover {
+    border-color: $border-focus;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-focus;
+    box-shadow: 0 0 0 3px $accent-muted;
+  }
+
+  &.placeholder {
+    color: $text-muted;
+  }
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 50;
+  animation: slideUp $transition-fast forwards;
+}
+
+.calendarWrap {
+  padding: 0.75rem;
+  background: $bg-elevated;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+}
+
+.calendar {
+  --rdp-accent-color: #{$accent};
+  --rdp-accent-background-color: #{$accent-muted};
+  --rdp-day-height: 36px;
+  --rdp-day-width: 36px;
+  --rdp-selected-border: 2px solid #{$accent};
+  color: $text-primary;
+
+  :global(.rdp-month_caption) {
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  :global(.rdp-weekday) {
+    font-weight: 600;
+    color: $text-secondary;
+    font-size: 0.85rem;
+  }
+
+  :global(.rdp-day_button) {
+    border-radius: $radius-sm;
+    color: $text-primary;
+    transition: background $transition-fast;
+
+    &:hover {
+      background: $bg-hover;
+    }
+  }
+
+  :global(.rdp-selected .rdp-day_button) {
+    background: $accent;
+    color: white;
+  }
+
+  :global(.rdp-today:not(.rdp-selected) .rdp-day_button) {
+    border: 1px solid $accent;
+  }
+
+  :global(.rdp-outside .rdp-day_button) {
+    color: $text-muted;
+    opacity: 0.5;
+  }
+
+  :global(.rdp-chevron) {
+    fill: $text-secondary;
+  }
+
+  :global(.rdp-button_previous),
+  :global(.rdp-button_next) {
+    border-radius: $radius-sm;
+
+    &:hover {
+      background: $bg-hover;
+    }
+  }
+}
+
+.clearBtn {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.45rem;
+  font-size: 0.8rem;
+  color: $text-secondary;
+  border-radius: $radius-sm;
+  transition: background $transition-fast, color $transition-fast;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+}

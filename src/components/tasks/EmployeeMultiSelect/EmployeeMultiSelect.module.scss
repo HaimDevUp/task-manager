@@ -1,0 +1,40 @@
+@use "@/styles/variables" as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: $bg-secondary;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  color: $text-secondary;
+  font-size: 0.85rem;
+  transition: background $transition-fast, border-color $transition-fast,
+    color $transition-fast, transform $transition-fast;
+  position: relative;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-primary;
+    transform: translateY(-1px);
+  }
+
+  &.selected {
+    border-color: $accent;
+    background: $accent-muted;
+    color: $accent;
+  }
+}
+
+.check {
+  margin-right: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+}

@@ -1,0 +1,113 @@
+@use "@/styles/variables" as *;
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.topBar {
+  height: $header-height;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  background: $bg-secondary;
+  border-bottom: 1px solid $border;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.loadingMain {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $text-muted;
+}
+
+.mobileNav {
+  display: none;
+  gap: 0.25rem;
+
+  button {
+    padding: 0.4rem 0.75rem;
+    border-radius: $radius-sm;
+    color: $text-muted;
+    font-size: 0.8rem;
+    transition: background $transition-fast, color $transition-fast;
+
+    &:hover:not(:disabled) {
+      color: $text-primary;
+      background: $bg-hover;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.navActive {
+  background: $accent-muted !important;
+  color: $accent !important;
+}
+
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: $sidebar-width $task-list-width $detail-width;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.col {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.employeesCol {
+  order: 1;
+}
+
+.tasksCol {
+  order: 2;
+}
+
+.detailCol {
+  order: 3;
+}
+
+@media (max-width: $bp-tablet) {
+  .layout {
+    grid-template-columns: 220px 240px 1fr;
+  }
+}
+
+@media (max-width: $bp-mobile) {
+  .mobileNav {
+    display: flex;
+  }
+
+  .layout {
+    display: block;
+    position: relative;
+  }
+
+  .col {
+    display: none;
+    height: 100%;
+  }
+
+  .mobileVisible {
+    display: block;
+    height: 100%;
+  }
+}

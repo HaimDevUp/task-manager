@@ -1,0 +1,165 @@
+@use "@/styles/variables" as *;
+
+.listPanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: $bg-tertiary;
+  border-left: 1px solid $border;
+  overflow: hidden;
+}
+
+.header {
+  padding: 1rem;
+  border-bottom: 1px solid $border;
+  flex-shrink: 0;
+}
+
+.heading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: $text-primary;
+}
+
+.search {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  background: $bg-secondary;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  color: $text-primary;
+  font-size: 0.875rem;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-focus;
+    box-shadow: 0 0 0 3px $accent-muted;
+  }
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 4.5rem;
+  transition: opacity $transition-fast;
+
+  &.reordering {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}
+
+.skeletons {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0.5rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: $radius-md;
+  background: transparent;
+  transition: background $transition-fast, box-shadow $transition-fast,
+    opacity $transition-fast;
+
+  &:hover {
+    background: $bg-hover;
+  }
+
+  &.selected {
+    background: $accent-muted;
+
+    .titleBtn {
+      color: $accent;
+      font-weight: 600;
+    }
+  }
+
+  &.dragging {
+    opacity: 0.5;
+    box-shadow: $shadow-md;
+    background: $bg-elevated;
+  }
+}
+
+.dragHandle {
+  padding: 0.5rem 0.35rem;
+  color: $text-muted;
+  font-size: 0.85rem;
+  cursor: grab;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $text-secondary;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.titleBtn {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  padding: 0.75rem 0.35rem 0.75rem 0;
+  color: $text-primary;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color $transition-fast;
+}
+
+.statusWrap {
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+  pointer-events: none;
+}
+
+.fab {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 10;
+  width: 52px;
+  height: 52px;
+  border-radius: $radius-full;
+  background: $accent;
+  color: white;
+  font-size: 1.75rem;
+  font-weight: 300;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow-md;
+  transition: background $transition-fast, transform $transition-fast,
+    box-shadow $transition-fast;
+
+  &:hover {
+    background: $accent-hover;
+    transform: scale(1.06);
+    box-shadow: $shadow-lg;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
