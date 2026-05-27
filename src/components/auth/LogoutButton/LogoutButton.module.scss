@@ -1,0 +1,21 @@
+@use "@/styles/variables" as *;
+
+.logoutBtn {
+  padding: 0.45rem 0.9rem;
+  border-radius: $radius-sm;
+  color: $text-secondary;
+  font-size: 0.85rem;
+  border: 1px solid $border;
+  transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    color: $text-primary;
+    background: $bg-hover;
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

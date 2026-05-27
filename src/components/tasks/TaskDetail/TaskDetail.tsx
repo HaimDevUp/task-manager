@@ -16,7 +16,12 @@ import { formatDate, formatDateTime, toInputDateValue } from "@/lib/formatDate";
 import * as api from "@/services/apiClient";
 import styles from "./TaskDetail.module.scss";
 
-type EditableField = "description" | "dueDate" | "custom1" | "custom2";
+type EditableField =
+  | "title"
+  | "description"
+  | "dueDate"
+  | "custom1"
+  | "custom2";
 
 interface TaskDetailProps {
   taskId: string | null;
@@ -33,6 +38,7 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
   const [assignDraft, setAssignDraft] = useState<string[]>([]);
   const [actionLoading, setActionLoading] = useState(false);
   const [editingField, setEditingField] = useState<EditableField | null>(null);
+  const [titleDraft, setTitleDraft] = useState("");
   const [descriptionDraft, setDescriptionDraft] = useState("");
   const [dueDateDraft, setDueDateDraft] = useState("");
   const [custom1Draft, setCustom1Draft] = useState("");
@@ -42,6 +48,7 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
 
   const syncDraftsFromTask = useCallback(
     (t: Task) => {
+      if (editingField !== "title") setTitleDraft(t.title);
       if (editingField !== "description") setDescriptionDraft(t.description);
       if (editingField !== "dueDate") setDueDateDraft(toInputDateValue(t.dueDate));
       if (editingField !== "custom1") setCustom1Draft(t.customField1);
@@ -83,6 +90,7 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
       .fetchTask(taskId)
       .then((t) => {
         setTask(t);
+        setTitleDraft(t.title);
         setDescriptionDraft(t.description);
         setDueDateDraft(toInputDateValue(t.dueDate));
         setCustom1Draft(t.customField1);
@@ -112,6 +120,7 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
       setTask(updated);
       onUpdate(updated);
       setEditingField(null);
+      if (field === "title") setTitleDraft(updated.title);
       if (field === "description") setDescriptionDraft(updated.description);
       if (field === "dueDate") setDueDateDraft(toInputDateValue(updated.dueDate));
       if (field === "custom1") setCustom1Draft(updated.customField1);
@@ -125,6 +134,7 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
 
   const startEdit = (field: EditableField) => {
     if (!task) return;
+    if (field === "title") setTitleDraft(task.title);
     if (field === "description") setDescriptionDraft(task.description);
     if (field === "dueDate") setDueDateDraft(toInputDateValue(task.dueDate));
     if (field === "custom1") setCustom1Draft(task.customField1);
@@ -134,6 +144,7 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
 
   const cancelEdit = (field: EditableField) => {
     if (!task) return;
+    if (field === "title") setTitleDraft(task.title);
     if (field === "description") setDescriptionDraft(task.description);
     if (field === "dueDate") setDueDateDraft(toInputDateValue(task.dueDate));
     if (field === "custom1") setCustom1Draft(task.customField1);
@@ -243,7 +254,42 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
     <section className={styles.detail}>
       <article className={styles.content}>
         <header className={styles.header}>
-          <h1 className={styles.title}>{task.title}</h1>
+          {isEditing("title") ? (
+            <div className={styles.titleEdit}>
+              <input
+                type="text"
+                className={styles.titleInput}
+                value={titleDraft}
+                onChange={(e) => setTitleDraft(e.target.value)}
+                maxLength={200}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && titleDraft.trim()) {
+                    e.preventDefault();
+                    saveField({ title: titleDraft.trim() }, "title");
+                  }
+                  if (e.key === "Escape") cancelEdit("title");
+                }}
+              />
+              <InlineEditActions
+                loading={actionLoading}
+                onSave={() => {
+                  const trimmed = titleDraft.trim();
+                  if (!trimmed) return;
+                  saveField({ title: trimmed }, "title");
+                }}
+                onCancel={() => cancelEdit("title")}
+              />
+            </div>
+          ) : (
+            <h1
+              className={`${styles.title} ${styles.titleClickable}`}
+              onClick={() => startEdit("title")}
+              {...editableKeyProps("title")}
+            >
+              {task.title}
+            </h1>
+          )}
           <StatusBadge status={task.status} />
         </header>
 

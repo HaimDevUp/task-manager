@@ -8,6 +8,7 @@ import { EmployeeTabs } from "@/components/employees/EmployeeTabs/EmployeeTabs";
 import { TaskList } from "@/components/tasks/TaskList/TaskList";
 import { TaskDetail } from "@/components/tasks/TaskDetail/TaskDetail";
 import { CreateTaskModal } from "@/components/tasks/CreateTaskModal/CreateTaskModal";
+import { LogoutButton } from "@/components/auth/LogoutButton/LogoutButton";
 import type { Task } from "@/types/task";
 import styles from "./TaskManagerApp.module.scss";
 
@@ -143,7 +144,9 @@ export function TaskManagerApp() {
     <div className={styles.app}>
       <header className={styles.topBar}>
         <h1 className={styles.logo}>ניהול משימות</h1>
-        <nav className={styles.mobileNav} aria-label="ניווט מובייל">
+        <div className={styles.topBarEnd}>
+          <LogoutButton />
+          <nav className={styles.mobileNav} aria-label="ניווט מובייל">
           <button
             type="button"
             className={mobileView === "employees" ? styles.navActive : ""}
@@ -166,7 +169,8 @@ export function TaskManagerApp() {
           >
             פירוט
           </button>
-        </nav>
+          </nav>
+        </div>
       </header>
 
       <div className={styles.layout}>

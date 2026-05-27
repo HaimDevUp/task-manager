@@ -3,7 +3,7 @@ import "@/styles/globals.scss";
 import styles from "./layout.module.scss";
 
 export const metadata: Metadata = {
-  title: "ניהול משימות",
+  title: "UpNext Manager",
   description: "מערכת פנימית לניהול משימות לפי עובדים",
 };
 
