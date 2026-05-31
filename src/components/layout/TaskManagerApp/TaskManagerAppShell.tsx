@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { LoginGate } from "@/components/auth/LoginGate/LoginGate";
+import { AppToaster } from "@/components/ui/AppToaster/AppToaster";
 import { TaskManagerApp } from "./TaskManagerApp";
 import styles from "./TaskManagerApp.module.scss";
 
@@ -17,6 +18,7 @@ function LoadingShell() {
 export function TaskManagerAppShell() {
   return (
     <LoginGate>
+      <AppToaster />
       <Suspense fallback={<LoadingShell />}>
         <TaskManagerApp />
       </Suspense>

@@ -4,6 +4,10 @@ import { emitToAll } from "@/lib/io";
 import { SOCKET_EVENTS } from "@/lib/constants";
 import { getMongoErrorMessage } from "@/lib/mongoErrors";
 import * as taskService from "@/services/taskService";
+import {
+  getAppUrl,
+  notifyAssigneesByEmail,
+} from "@/lib/emails/taskEmailNotifications";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -39,10 +43,28 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const task = await taskService.updateTask(id, parsed.data);
+    const { actorEmployeeId, ...updateData } = parsed.data;
+    const previousTask = await taskService.getTaskById(id);
+    const task = await taskService.updateTask(id, updateData);
 
     if (!task) {
       return NextResponse.json({ error: "משימה לא נמצאה" }, { status: 404 });
+    }
+
+    if (updateData.assignedEmployees && previousTask) {
+      const newlyAssigned = updateData.assignedEmployees.filter(
+        (employeeId) => !previousTask.assignedEmployees.includes(employeeId)
+      );
+
+      if (newlyAssigned.length > 0) {
+        await notifyAssigneesByEmail({
+          task,
+          assigneeIds: newlyAssigned,
+          actorEmployeeId,
+          appUrl: getAppUrl(request),
+          isNewTask: false,
+        });
+      }
     }
 
     emitToAll(SOCKET_EVENTS.TASK_UPDATED, { task });

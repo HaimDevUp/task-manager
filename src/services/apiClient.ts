@@ -66,3 +66,16 @@ export async function reorderTasks(
   );
   return data.tasks;
 }
+
+export async function notifyTask(
+  taskId: string,
+  input: { senderEmployeeId: string; recipientEmployeeId: string }
+): Promise<void> {
+  await handleResponse<{ success: boolean }>(
+    await fetch(`/api/tasks/${taskId}/notify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    })
+  );
+}

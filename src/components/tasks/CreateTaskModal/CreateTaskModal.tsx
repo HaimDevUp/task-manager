@@ -15,6 +15,7 @@ interface CreateTaskModalProps {
   onCreated: (task: import("@/types/task").Task) => void;
   /** עובד לשיוך אוטומטי בפתיחה (טאב "לא משויך" = ללא שיוך) */
   preselectEmployeeId?: string | null;
+  currentEmployeeId: string;
 }
 
 export function CreateTaskModal({
@@ -22,6 +23,7 @@ export function CreateTaskModal({
   onClose,
   onCreated,
   preselectEmployeeId = null,
+  currentEmployeeId,
 }: CreateTaskModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -85,6 +87,10 @@ export function CreateTaskModal({
         status,
         customField1,
         customField2,
+        actorEmployeeId:
+          currentEmployeeId !== UNASSIGNED_TAB_ID
+            ? currentEmployeeId
+            : undefined,
       });
       onCreated(task);
       onClose();

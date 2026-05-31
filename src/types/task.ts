@@ -1,9 +1,15 @@
-export type TaskStatus = "חדש" | "בתהליך" | "ממתין" | "הושלם";
+export type TaskStatus =
+  | "חדש"
+  | "בתהליך"
+  | "ממתין"
+  | "ממתין לבדיקה"
+  | "הושלם";
 
 export const TASK_STATUSES: TaskStatus[] = [
   "חדש",
   "בתהליך",
   "ממתין",
+  "ממתין לבדיקה",
   "הושלם",
 ];
 
@@ -41,6 +47,8 @@ export interface CreateTaskInput {
   status?: TaskStatus;
   customField1?: string;
   customField2?: string;
+  /** מזהה העובד שביצע את הפעולה — לשליחת מיילים בלבד */
+  actorEmployeeId?: string;
 }
 
 export interface UpdateTaskInput {
@@ -52,6 +60,8 @@ export interface UpdateTaskInput {
   dueDate?: string | null;
   customField1?: string;
   customField2?: string;
+  /** מזהה העובד שביצע את הפעולה — לשליחת מיילים בלבד */
+  actorEmployeeId?: string;
 }
 
 export interface ReorderTaskInput {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { employees, UNASSIGNED_TAB_ID } from "../../../../config/employees";
 import { useTasks } from "@/hooks/useTasks";
 import { EmployeeTabs } from "@/components/employees/EmployeeTabs/EmployeeTabs";
@@ -10,6 +10,7 @@ import { TaskDetail } from "@/components/tasks/TaskDetail/TaskDetail";
 import { CreateTaskModal } from "@/components/tasks/CreateTaskModal/CreateTaskModal";
 import { LogoutButton } from "@/components/auth/LogoutButton/LogoutButton";
 import type { Task } from "@/types/task";
+import { useResizableColumnLayout } from "@/hooks/useResizableColumnLayout";
 import styles from "./TaskManagerApp.module.scss";
 
 const VALID_EMPLOYEE_IDS = new Set([
@@ -25,24 +26,31 @@ function getDefaultEmployeeId(): string {
   return employees[0]?.id ?? UNASSIGNED_TAB_ID;
 }
 
+function parseTaskIdFromPath(path: string): string | null {
+  const match = path.match(/^\/task\/([^/]+)/);
+  return match?.[1] ?? null;
+}
+
 export function TaskManagerApp() {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const selectedTaskId = useMemo(() => {
-    const match = pathname.match(/^\/task\/([^/]+)/);
-    return match?.[1] ?? null;
-  }, [pathname]);
+  const initialUrlState = useMemo(() => {
+    const taskId = parseTaskIdFromPath(pathname);
+    const employeeFromUrl = searchParams.get("employee");
+    const employeeId =
+      employeeFromUrl && isValidEmployeeId(employeeFromUrl)
+        ? employeeFromUrl
+        : getDefaultEmployeeId();
+    return { taskId, employeeId };
+  }, [pathname, searchParams]);
 
-  const employeeFromUrl = searchParams.get("employee");
-  const initialEmployeeId =
-    employeeFromUrl && isValidEmployeeId(employeeFromUrl)
-      ? employeeFromUrl
-      : getDefaultEmployeeId();
-
-  const [selectedEmployeeId, setSelectedEmployeeId] =
-    useState(initialEmployeeId);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(
+    initialUrlState.taskId
+  );
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(
+    initialUrlState.employeeId
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPreselectEmployeeId, setModalPreselectEmployeeId] = useState<
     string | null
@@ -57,62 +65,100 @@ export function TaskManagerApp() {
   );
 
   const {
+    layoutRef,
+    widths,
+    startResize,
+    activeResizer,
+    boundary1,
+    boundary2,
+  } = useResizableColumnLayout();
+
+  const {
     employeeTasks,
     loading,
     error,
     upsertTask,
     removeTask,
-    setAllTasks,
+    applyTasksReorder,
   } = useTasks(selectedEmployeeId);
 
-  const buildUrl = useCallback(
-    (taskId: string | null, employeeId: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("employee", employeeId);
-      const query = params.toString();
-      if (taskId) {
-        return `/task/${taskId}?${query}`;
+  const buildUrl = useCallback((taskId: string | null, employeeId: string) => {
+    const params = new URLSearchParams(
+      typeof window !== "undefined" ? window.location.search : ""
+    );
+    params.set("employee", employeeId);
+    const query = params.toString();
+    if (taskId) {
+      return `/task/${taskId}?${query}`;
+    }
+    return query ? `/?${query}` : "/";
+  }, []);
+
+  const syncUrl = useCallback(
+    (
+      taskId: string | null,
+      employeeId: string,
+      mode: "push" | "replace" = "push"
+    ) => {
+      if (typeof window === "undefined") return;
+      const url = buildUrl(taskId, employeeId);
+      if (mode === "replace") {
+        window.history.replaceState(null, "", url);
+      } else {
+        window.history.pushState(null, "", url);
       }
-      return query ? `/?${query}` : "/";
     },
-    [searchParams]
+    [buildUrl]
   );
 
-  // סנכרון עובד מ-URL (חזרה/קדימה בדפדפן)
-  useEffect(() => {
-    const emp = searchParams.get("employee");
-    if (emp && isValidEmployeeId(emp) && emp !== selectedEmployeeId) {
-      setSelectedEmployeeId(emp);
-    }
-  }, [searchParams, selectedEmployeeId]);
-
-  // הוספת employee ל-URL אם חסר
   useEffect(() => {
     if (!searchParams.get("employee")) {
-      router.replace(buildUrl(selectedTaskId, selectedEmployeeId), {
-        scroll: false,
-      });
+      syncUrl(selectedTaskId, selectedEmployeeId, "replace");
     }
-  }, [searchParams, selectedEmployeeId, selectedTaskId, router, buildUrl]);
+  }, [searchParams, selectedEmployeeId, selectedTaskId, syncUrl]);
+
+  // סנכרון חזרה/קדימה בדפדפן ללא רענון
+  useEffect(() => {
+    const onPopState = () => {
+      const taskId = parseTaskIdFromPath(window.location.pathname);
+      const employeeFromUrl = new URLSearchParams(window.location.search).get(
+        "employee"
+      );
+      const employeeId =
+        employeeFromUrl && isValidEmployeeId(employeeFromUrl)
+          ? employeeFromUrl
+          : getDefaultEmployeeId();
+
+      setSelectedTaskId(taskId);
+      setSelectedEmployeeId(employeeId);
+      setMobileView(taskId ? "detail" : "tasks");
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const navigateToTask = useCallback(
     (taskId: string | null, employeeId = selectedEmployeeId) => {
-      router.push(buildUrl(taskId, employeeId));
+      setSelectedTaskId(taskId);
+      setSelectedEmployeeId(employeeId);
+      syncUrl(taskId, employeeId, "push");
       setMobileView(taskId ? "detail" : "tasks");
     },
-    [router, buildUrl, selectedEmployeeId]
+    [selectedEmployeeId, syncUrl]
   );
 
   const handleEmployeeSelect = (id: string) => {
     if (id !== selectedEmployeeId && selectedTaskId) {
       setSelectedEmployeeId(id);
+      setSelectedTaskId(null);
       setMobileView("tasks");
-      router.push(buildUrl(null, id));
+      syncUrl(null, id, "push");
       return;
     }
     setSelectedEmployeeId(id);
     setMobileView("tasks");
-    router.push(buildUrl(selectedTaskId, id));
+    syncUrl(selectedTaskId, id, "push");
   };
 
   const handleTaskSelect = (id: string) => {
@@ -126,13 +172,12 @@ export function TaskManagerApp() {
         ? task.assignedEmployees[0]
         : UNASSIGNED_TAB_ID;
     setSelectedEmployeeId(employeeId);
-    router.push(buildUrl(task._id, employeeId));
+    setSelectedTaskId(task._id);
+    syncUrl(task._id, employeeId, "push");
     setMobileView("detail");
   };
 
-  const handleReorder = (tasks: Task[]) => {
-    setAllTasks(tasks);
-  };
+  const handleReorder = applyTasksReorder;
 
   useEffect(() => {
     if (selectedTaskId) {
@@ -173,9 +218,13 @@ export function TaskManagerApp() {
         </div>
       </header>
 
-      <div className={styles.layout}>
+      <div
+        ref={layoutRef}
+        className={`${styles.layout} ${activeResizer !== null ? styles.layoutResizing : ""}`}
+      >
         <div
           className={`${styles.col} ${styles.employeesCol} ${mobileView === "employees" ? styles.mobileVisible : ""}`}
+          style={{ width: `${widths[0]}%` }}
         >
           <EmployeeTabs
             selectedId={selectedEmployeeId}
@@ -186,6 +235,7 @@ export function TaskManagerApp() {
 
         <div
           className={`${styles.col} ${styles.tasksCol} ${mobileView === "tasks" ? styles.mobileVisible : ""}`}
+          style={{ width: `${widths[1]}%` }}
         >
           <TaskList
             tasks={employeeTasks}
@@ -200,19 +250,38 @@ export function TaskManagerApp() {
 
         <div
           className={`${styles.col} ${styles.detailCol} ${mobileView === "detail" ? styles.mobileVisible : ""}`}
+          style={{ width: `${widths[2]}%` }}
         >
           <TaskDetail
             taskId={selectedTaskId}
             tasks={employeeTasks}
+            currentEmployeeId={selectedEmployeeId}
             onUpdate={upsertTask}
             onDelete={(id) => {
               removeTask(id);
-              if (pathname.startsWith("/task/")) {
+              if (selectedTaskId === id) {
                 navigateToTask(null);
               }
             }}
           />
         </div>
+
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="שינוי רוחב עמודת עובדים ומשימות"
+          className={`${styles.resizer} ${activeResizer === 0 ? styles.resizerActive : ""}`}
+          style={{ right: `${boundary1}%` }}
+          onMouseDown={startResize(0)}
+        />
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="שינוי רוחב עמודת משימות ופירוט"
+          className={`${styles.resizer} ${activeResizer === 1 ? styles.resizerActive : ""}`}
+          style={{ right: `${boundary2}%` }}
+          onMouseDown={startResize(1)}
+        />
       </div>
 
       <CreateTaskModal
@@ -220,6 +289,7 @@ export function TaskManagerApp() {
         onClose={() => setModalOpen(false)}
         onCreated={handleTaskCreated}
         preselectEmployeeId={modalPreselectEmployeeId}
+        currentEmployeeId={selectedEmployeeId}
       />
     </div>
   );

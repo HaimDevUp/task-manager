@@ -17,7 +17,12 @@ export function EmployeeTabs({
 }: EmployeeTabsProps) {
   const tabs = [
     ...employees,
-    { id: UNASSIGNED_TAB_ID, name: UNASSIGNED_TAB_NAME, image: "" },
+    {
+      id: UNASSIGNED_TAB_ID,
+      name: UNASSIGNED_TAB_NAME,
+      image: "",
+      email: "",
+    },
   ];
 
   return (

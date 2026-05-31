@@ -5,6 +5,7 @@ const statusClassMap: Record<TaskStatus, string> = {
   "חדש": styles.new,
   "בתהליך": styles.inProgress,
   "ממתין": styles.waiting,
+  "ממתין לבדיקה": styles.waiting,
   "הושלם": styles.done,
 };
 

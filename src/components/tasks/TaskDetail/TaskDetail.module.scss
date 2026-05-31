@@ -297,6 +297,15 @@
   margin-bottom: 1.25rem;
 }
 
+.quickActionsRow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+}
+
 .statusBtns {
   display: flex;
   flex-wrap: wrap;
@@ -348,6 +357,72 @@
   }
 }
 
+.assignBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid $border;
+  background: $bg-elevated;
+  color: $text-primary;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition-fast, transform $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $bg-hover;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px $accent-muted;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.assignIcon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.notifyBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid #f7cd4f;
+  background: #fff3c2;
+  color: #8a5a00;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition-fast, transform $transition-fast,
+    box-shadow $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: #ffe89a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(247, 205, 79, 0.35);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(247, 205, 79, 0.45);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.notifyIcon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
 .assignPanel {
   margin-top: 0.75rem;
   padding: 1rem;
@@ -397,22 +472,97 @@
 }
 
 .deleteBtn {
-  padding: 0.65rem 1.25rem;
+  width: 44px;
+  height: 44px;
+  padding: 0;
   background: $danger-muted;
   color: $danger;
   border: 1px solid transparent;
-  border-radius: $radius-md;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: background $transition-fast, color $transition-fast;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition-fast, color $transition-fast,
+    transform $transition-fast;
 
   &:hover:not(:disabled) {
     background: $danger;
     color: white;
+    transform: translateY(-1px);
   }
 
   &:disabled {
     opacity: 0.5;
+  }
+}
+
+.deleteIcon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 20, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 70;
+}
+
+.confirmDialog {
+  width: min(420px, 100%);
+  background: $bg-primary;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.1rem 1.1rem 1rem;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.28);
+}
+
+.confirmTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 0.4rem;
+}
+
+.confirmText {
+  font-size: 0.9rem;
+  color: $text-secondary;
+  margin-bottom: 1rem;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.confirmCancelBtn {
+  padding: 0.5rem 0.95rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  color: $text-secondary;
+  background: $bg-elevated;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+}
+
+.confirmDeleteBtn {
+  padding: 0.5rem 1rem;
+  border-radius: $radius-md;
+  background: $danger;
+  color: white;
+  transition: filter $transition-fast;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.05);
   }
 }
 

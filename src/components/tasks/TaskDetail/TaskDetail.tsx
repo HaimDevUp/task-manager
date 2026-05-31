@@ -14,6 +14,7 @@ import { AutoGrowTextarea } from "./AutoGrowTextarea";
 import { HebrewDatePicker } from "@/components/ui/HebrewDatePicker/HebrewDatePicker";
 import { formatDate, formatDateTime, toInputDateValue } from "@/lib/formatDate";
 import * as api from "@/services/apiClient";
+import { toastError, toastSuccess } from "@/lib/toast";
 import styles from "./TaskDetail.module.scss";
 
 type EditableField =
@@ -26,16 +27,26 @@ type EditableField =
 interface TaskDetailProps {
   taskId: string | null;
   tasks: Task[];
+  currentEmployeeId: string;
   onUpdate: (task: Task) => void;
   onDelete: (id: string) => void;
 }
 
-export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProps) {
+export function TaskDetail({
+  taskId,
+  tasks,
+  currentEmployeeId,
+  onUpdate,
+  onDelete,
+}: TaskDetailProps) {
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showAssign, setShowAssign] = useState(false);
   const [assignDraft, setAssignDraft] = useState<string[]>([]);
+  const [showNotify, setShowNotify] = useState(false);
+  const [notifyDraft, setNotifyDraft] = useState<string[]>([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [editingField, setEditingField] = useState<EditableField | null>(null);
   const [titleDraft, setTitleDraft] = useState("");
@@ -106,7 +117,19 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
 
   useEffect(() => {
     setEditingField(null);
+    setShowDeleteConfirm(false);
   }, [taskId]);
+
+  useEffect(() => {
+    if (!showDeleteConfirm) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !actionLoading) {
+        setShowDeleteConfirm(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showDeleteConfirm, actionLoading]);
 
   const saveField = async (
     payload: Parameters<typeof api.updateTask>[1],
@@ -159,8 +182,9 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
       const updated = await api.updateTask(task._id, { status });
       setTask(updated);
       onUpdate(updated);
+      toastSuccess(`הסטטוס עודכן ל"${status}"`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "שגיאה");
+      toastError(err, "שגיאה בעדכון הסטטוס");
     } finally {
       setActionLoading(false);
     }
@@ -172,27 +196,66 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
     try {
       const updated = await api.updateTask(task._id, {
         assignedEmployees: assignDraft,
+        actorEmployeeId: currentEmployeeId,
       });
       setTask(updated);
       onUpdate(updated);
       setShowAssign(false);
+      toastSuccess("שיוך העובדים נשמר בהצלחה");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "שגיאה");
+      toastError(err, "שגיאה בשמירת השיוך");
     } finally {
       setActionLoading(false);
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
+    setShowAssign(false);
+    setShowNotify(false);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     if (!task) return;
-    if (!confirm("האם למחוק את המשימה?")) return;
     setActionLoading(true);
     try {
       await api.deleteTask(task._id);
       onDelete(task._id);
       setTask(null);
+      setShowDeleteConfirm(false);
+      toastSuccess("המשימה נמחקה בהצלחה");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "שגיאה במחיקה");
+      toastError(err, "שגיאה במחיקת המשימה");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleNotifyClick = () => {
+    setShowAssign(false);
+    setNotifyDraft([]);
+    setShowNotify((prev) => !prev);
+  };
+
+  const handleNotifySend = async () => {
+    if (!task || notifyDraft.length === 0) return;
+
+    const recipient = employees.find((e) => e.id === notifyDraft[0]);
+    setActionLoading(true);
+    try {
+      await api.notifyTask(task._id, {
+        senderEmployeeId: currentEmployeeId,
+        recipientEmployeeId: notifyDraft[0],
+      });
+      setShowNotify(false);
+      setNotifyDraft([]);
+      toastSuccess(
+        recipient
+          ? `ההתראה נשלחה ל${recipient.name}`
+          : "ההתראה נשלחה בהצלחה"
+      );
+    } catch (err) {
+      toastError(err, "שגיאה בשליחת ההתראה");
     } finally {
       setActionLoading(false);
     }
@@ -463,35 +526,82 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
             </div>
           </div>
 
-          <div className={styles.actionGroup}>
+          <div className={styles.quickActionsRow}>
             <button
               type="button"
-              className={styles.actionBtn}
+              className={styles.assignBtn}
               onClick={() => {
+                setShowNotify(false);
                 setAssignDraft(task.assignedEmployees);
                 setShowAssign(!showAssign);
               }}
               disabled={actionLoading}
+              aria-label="שיוך עובדים"
+              title="שיוך עובדים"
             >
-              שיוך עובדים
+              <span className={styles.assignIcon} aria-hidden="true">
+                👥
+              </span>
             </button>
-            {showAssign && (
-              <div className={styles.assignPanel}>
-                <EmployeeMultiSelect
-                  selected={assignDraft}
-                  onChange={setAssignDraft}
-                />
-                <button
-                  type="button"
-                  className={styles.saveAssignBtn}
-                  onClick={handleAssignSave}
-                  disabled={actionLoading}
-                >
-                  שמור שיוך
-                </button>
-              </div>
-            )}
+            <button
+              type="button"
+              className={styles.notifyBtn}
+              onClick={handleNotifyClick}
+              disabled={actionLoading}
+              aria-label="שליחת התראה לעובד"
+              title="שליחת התראה לעובד"
+            >
+              <span className={styles.notifyIcon} aria-hidden="true">
+                🔔
+              </span>
+            </button>
+            <button
+              type="button"
+              className={styles.deleteBtn}
+              onClick={handleDeleteClick}
+              disabled={actionLoading}
+              aria-label="מחיקת משימה"
+              title="מחיקת משימה"
+            >
+              <span className={styles.deleteIcon} aria-hidden="true">
+                🗑️
+              </span>
+            </button>
           </div>
+
+          {showAssign && (
+            <div className={styles.assignPanel}>
+              <EmployeeMultiSelect
+                selected={assignDraft}
+                onChange={setAssignDraft}
+              />
+              <button
+                type="button"
+                className={styles.saveAssignBtn}
+                onClick={handleAssignSave}
+                disabled={actionLoading}
+              >
+                שמור שיוך
+              </button>
+            </div>
+          )}
+
+          {showNotify && (
+            <div className={styles.assignPanel}>
+              <EmployeeMultiSelect
+                selected={notifyDraft}
+                onChange={(ids) => setNotifyDraft(ids.slice(-1))}
+              />
+              <button
+                type="button"
+                className={styles.saveAssignBtn}
+                onClick={handleNotifySend}
+                disabled={actionLoading || notifyDraft.length === 0}
+              >
+                שלח התראה
+              </button>
+            </div>
+          )}
 
           {/* שינוי סדר ידני — מושבת, משתמשים בגרירה בלבד
           <div className={styles.actionGroup}>
@@ -516,15 +626,50 @@ export function TaskDetail({ taskId, tasks, onUpdate, onDelete }: TaskDetailProp
           </div>
           */}
 
-          <button
-            type="button"
-            className={styles.deleteBtn}
-            onClick={handleDelete}
-            disabled={actionLoading}
-          >
-            מחיקת משימה
-          </button>
         </div>
+
+        {showDeleteConfirm && (
+          <div
+            className={styles.confirmOverlay}
+            onClick={() => {
+              if (!actionLoading) setShowDeleteConfirm(false);
+            }}
+            role="presentation"
+          >
+            <div
+              className={styles.confirmDialog}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="delete-task-title"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h4 id="delete-task-title" className={styles.confirmTitle}>
+                למחוק את המשימה?
+              </h4>
+              <p className={styles.confirmText}>
+                הפעולה הזו לא ניתנת לביטול.
+              </p>
+              <div className={styles.confirmActions}>
+                <button
+                  type="button"
+                  className={styles.confirmCancelBtn}
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={actionLoading}
+                >
+                  ביטול
+                </button>
+                <button
+                  type="button"
+                  className={styles.confirmDeleteBtn}
+                  onClick={handleDeleteConfirm}
+                  disabled={actionLoading}
+                >
+                  {actionLoading ? "מוחק..." : "מחיקה"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </article>
     </section>
   );

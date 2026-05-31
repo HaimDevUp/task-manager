@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -44,12 +44,17 @@ export function TaskList({
 }: TaskListProps) {
   const [search, setSearch] = useState("");
   const [reordering, setReordering] = useState(false);
+  const [orderedTasks, setOrderedTasks] = useState(tasks);
+
+  useEffect(() => {
+    setOrderedTasks(tasks);
+  }, [tasks]);
 
   const filteredTasks = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return tasks;
-    return tasks.filter((t) => t.title.toLowerCase().includes(q));
-  }, [tasks, search]);
+    if (!q) return orderedTasks;
+    return orderedTasks.filter((t) => t.title.toLowerCase().includes(q));
+  }, [orderedTasks, search]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -62,22 +67,31 @@ export function TaskList({
     const { active, over } = event;
     if (!over || active.id === over.id || search.trim()) return;
 
-    const oldIndex = tasks.findIndex((t) => t._id === active.id);
-    const newIndex = tasks.findIndex((t) => t._id === over.id);
+    const previousTasks = orderedTasks;
+    const oldIndex = orderedTasks.findIndex((t) => t._id === active.id);
+    const newIndex = orderedTasks.findIndex((t) => t._id === over.id);
     if (oldIndex === -1 || newIndex === -1) return;
 
-    const reordered = arrayMove(tasks, oldIndex, newIndex);
-    const items = reordered.map((task, index) => ({
-      id: task._id,
+    const reordered = arrayMove(orderedTasks, oldIndex, newIndex);
+    const optimistic = reordered.map((task, index) => ({
+      ...task,
       order: reordered.length - 1 - index,
     }));
+    const items = optimistic.map((task) => ({
+      id: task._id,
+      order: task.order,
+    }));
+
+    setOrderedTasks(optimistic);
+    onReorder(optimistic);
 
     setReordering(true);
     try {
       const updated = await api.reorderTasks(items);
       onReorder(updated);
     } catch {
-      // socket will sync on success from other clients; reload handled by parent
+      setOrderedTasks(previousTasks);
+      onReorder(previousTasks);
     } finally {
       setReordering(false);
     }

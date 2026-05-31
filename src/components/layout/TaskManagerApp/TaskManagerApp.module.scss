@@ -68,15 +68,51 @@
 
 .layout {
   flex: 1;
-  display: grid;
-  grid-template-columns: $sidebar-width $task-list-width $detail-width;
+  display: flex;
+  position: relative;
   overflow: hidden;
   min-height: 0;
 }
 
+.layoutResizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
 .col {
+  flex-shrink: 0;
   min-height: 0;
   overflow: hidden;
+}
+
+.resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  margin-right: -6px;
+  cursor: col-resize;
+  z-index: 20;
+  pointer-events: auto;
+  touch-action: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: transparent;
+    border-radius: 1px;
+    transition: background $transition-fast;
+  }
+
+  &:hover::after,
+  &.resizerActive::after {
+    background: $accent;
+  }
 }
 
 .employeesCol {
@@ -91,13 +127,11 @@
   order: 3;
 }
 
-@media (max-width: $bp-tablet) {
-  .layout {
-    grid-template-columns: 220px 240px 1fr;
-  }
-}
-
 @media (max-width: $bp-mobile) {
+  .resizer {
+    display: none;
+  }
+
   .mobileNav {
     display: flex;
   }
@@ -109,6 +143,7 @@
 
   .col {
     display: none;
+    width: 100% !important;
     height: 100%;
   }
 

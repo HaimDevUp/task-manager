@@ -5,6 +5,10 @@ import { SOCKET_EVENTS } from "@/lib/constants";
 import * as taskService from "@/services/taskService";
 import { getMongoErrorMessage } from "@/lib/mongoErrors";
 import { UNASSIGNED_TAB_ID } from "../../../../config/employees";
+import {
+  getAppUrl,
+  notifyAssigneesByEmail,
+} from "@/lib/emails/taskEmailNotifications";
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,8 +40,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const task = await taskService.createTask(parsed.data);
+    const { actorEmployeeId, ...createData } = parsed.data;
+    const task = await taskService.createTask(createData);
     emitToAll(SOCKET_EVENTS.TASK_CREATED, { task, employeeId: UNASSIGNED_TAB_ID });
+
+    const assigneeIds =
+      task.assignedEmployees.length > 0
+        ? task.assignedEmployees
+        : createData.assignedEmployees ?? [];
+
+    if (assigneeIds.length > 0) {
+      await notifyAssigneesByEmail({
+        task,
+        assigneeIds,
+        actorEmployeeId,
+        appUrl: getAppUrl(request),
+        isNewTask: true,
+      });
+    }
 
     return NextResponse.json({ task }, { status: 201 });
   } catch (error) {

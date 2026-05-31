@@ -75,6 +75,25 @@ export function useTasks(employeeId: string) {
     setAllTasks((prev) => prev.filter((t) => t._id !== id));
   }, []);
 
+  /** עדכון מיידי אחרי גרירה (תת-קבוצה) או רשימה מלאה מהשרת */
+  const applyTasksReorder = useCallback((incoming: Task[]) => {
+    setAllTasks((prev) => {
+      if (incoming.length >= prev.length) {
+        return sortByOrder(incoming);
+      }
+      const orderById = new Map(
+        incoming.map((task) => [task._id, task.order] as const)
+      );
+      return sortByOrder(
+        prev.map((task) =>
+          orderById.has(task._id)
+            ? { ...task, order: orderById.get(task._id)! }
+            : task
+        )
+      );
+    });
+  }, []);
+
   return {
     allTasks,
     employeeTasks,
@@ -84,5 +103,6 @@ export function useTasks(employeeId: string) {
     upsertTask,
     removeTask,
     setAllTasks,
+    applyTasksReorder,
   };
 }
