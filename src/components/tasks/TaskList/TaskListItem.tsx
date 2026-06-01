@@ -14,9 +14,15 @@ interface TaskListItemProps {
   task: Task;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  sortable?: boolean;
 }
 
-export function TaskListItem({ task, isSelected, onSelect }: TaskListItemProps) {
+export function TaskListItem({
+  task,
+  isSelected,
+  onSelect,
+  sortable = true,
+}: TaskListItemProps) {
   const {
     attributes,
     listeners,
@@ -24,7 +30,7 @@ export function TaskListItem({ task, isSelected, onSelect }: TaskListItemProps) 
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task._id });
+  } = useSortable({ id: task._id, disabled: !sortable });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -47,15 +53,17 @@ export function TaskListItem({ task, isSelected, onSelect }: TaskListItemProps) 
       className={`${styles.item} ${dueUrgencyClass} ${isSelected ? styles.selected : ""} ${isDragging ? styles.dragging : ""}`}
       title={dueUrgencyLabel ?? undefined}
     >
-      <button
-        type="button"
-        className={styles.dragHandle}
-        aria-label="גרור לשינוי סדר"
-        {...attributes}
-        {...listeners}
-      >
-        ⠿
-      </button>
+      {sortable && (
+        <button
+          type="button"
+          className={styles.dragHandle}
+          aria-label="גרור לשינוי סדר"
+          {...attributes}
+          {...listeners}
+        >
+          ⠿
+        </button>
+      )}
       {dueUrgency !== "none" && (
         <span
           className={`${styles.dueMarker} ${dueUrgency === "week" ? styles.dueMarkerWeek : styles.dueMarkerUrgent}`}

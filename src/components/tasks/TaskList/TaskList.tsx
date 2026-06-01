@@ -23,6 +23,9 @@ import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import * as api from "@/services/apiClient";
 import styles from "./TaskList.module.scss";
 
+const COMPLETED_STATUS = "הושלם" as const;
+type TaskListTab = "active" | "completed";
+
 interface TaskListProps {
   tasks: Task[];
   selectedTaskId: string | null;
@@ -43,6 +46,7 @@ export function TaskList({
   onAddTask,
 }: TaskListProps) {
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState<TaskListTab>("active");
   const [reordering, setReordering] = useState(false);
   const [orderedTasks, setOrderedTasks] = useState(tasks);
 
@@ -50,11 +54,19 @@ export function TaskList({
     setOrderedTasks(tasks);
   }, [tasks]);
 
+  const tabTasks = useMemo(() => {
+    return orderedTasks.filter((t) =>
+      activeTab === "completed"
+        ? t.status === COMPLETED_STATUS
+        : t.status !== COMPLETED_STATUS
+    );
+  }, [orderedTasks, activeTab]);
+
   const filteredTasks = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return orderedTasks;
-    return orderedTasks.filter((t) => t.title.toLowerCase().includes(q));
-  }, [orderedTasks, search]);
+    if (!q) return tabTasks;
+    return tabTasks.filter((t) => t.title.toLowerCase().includes(q));
+  }, [tabTasks, search]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -64,20 +76,35 @@ export function TaskList({
   );
 
   const handleDragEnd = async (event: DragEndEvent) => {
+    if (activeTab !== "active") return;
+
     const { active, over } = event;
     if (!over || active.id === over.id || search.trim()) return;
 
     const previousTasks = orderedTasks;
-    const oldIndex = orderedTasks.findIndex((t) => t._id === active.id);
-    const newIndex = orderedTasks.findIndex((t) => t._id === over.id);
+    const activeTasks = orderedTasks.filter(
+      (t) => t.status !== COMPLETED_STATUS
+    );
+    const oldIndex = activeTasks.findIndex((t) => t._id === active.id);
+    const newIndex = activeTasks.findIndex((t) => t._id === over.id);
     if (oldIndex === -1 || newIndex === -1) return;
 
-    const reordered = arrayMove(orderedTasks, oldIndex, newIndex);
-    const optimistic = reordered.map((task, index) => ({
+    const reorderedActive = arrayMove(activeTasks, oldIndex, newIndex);
+    const optimisticActive = reorderedActive.map((task, index) => ({
       ...task,
-      order: reordered.length - 1 - index,
+      order: reorderedActive.length - 1 - index,
     }));
-    const items = optimistic.map((task) => ({
+    const orderById = new Map(
+      optimisticActive.map((task) => [task._id, task.order] as const)
+    );
+    const optimistic = [...orderedTasks]
+      .map((task) =>
+        orderById.has(task._id)
+          ? { ...task, order: orderById.get(task._id)! }
+          : task
+      )
+      .sort((a, b) => b.order - a.order);
+    const items = optimisticActive.map((task) => ({
       id: task._id,
       order: task.order,
     }));
@@ -100,7 +127,24 @@ export function TaskList({
   return (
     <section className={styles.listPanel}>
       <div className={styles.header}>
-        <h2 className={styles.heading}>משימות</h2>
+        <nav className={styles.tabBar} aria-label="סינון משימות">
+          <button
+            type="button"
+            className={`${styles.tab} ${activeTab === "active" ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab("active")}
+            aria-current={activeTab === "active" ? "true" : undefined}
+          >
+            משימות
+          </button>
+          <button
+            type="button"
+            className={`${styles.tab} ${activeTab === "completed" ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab("completed")}
+            aria-current={activeTab === "completed" ? "true" : undefined}
+          >
+            משימות שהושלמו
+          </button>
+        </nav>
         <input
           type="search"
           className={styles.search}
@@ -122,14 +166,22 @@ export function TaskList({
           <EmptyState title="שגיאה" description={error} icon="⚠️" />
         ) : filteredTasks.length === 0 ? (
           <EmptyState
-            title={search ? "לא נמצאו תוצאות" : "אין משימות"}
+            title={
+              search
+                ? "לא נמצאו תוצאות"
+                : activeTab === "completed"
+                  ? "אין משימות שהושלמו"
+                  : "אין משימות"
+            }
             description={
               search
                 ? "נסה חיפוש אחר"
-                : "צור משימה חדשה או בחר עובד אחר"
+                : activeTab === "completed"
+                  ? "משימות עם סטטוס הושלם יופיעו כאן"
+                  : "צור משימה חדשה או בחר עובד אחר"
             }
           />
-        ) : (
+        ) : activeTab === "active" ? (
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -152,6 +204,19 @@ export function TaskList({
               </ul>
             </SortableContext>
           </DndContext>
+        ) : (
+          <ul className={styles.list}>
+            {filteredTasks.map((task) => (
+              <li key={task._id}>
+                <TaskListItem
+                  task={task}
+                  isSelected={selectedTaskId === task._id}
+                  onSelect={onSelect}
+                  sortable={false}
+                />
+              </li>
+            ))}
+          </ul>
         )}
       </div>
 
