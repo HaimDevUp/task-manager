@@ -1,0 +1,20 @@
+/** צבעי מותג — מסונכרן עם src/styles/_variables.scss */
+export const BRAND_COLORS = {
+  mint: "#42d2b2",
+  cyan: "#4bc8c8",
+  indigo: "#3a2fcd",
+  white: "#ffffff",
+  coral: "#db6b6b",
+  green: "#75bd6f",
+  blue: "#2c1ffc",
+  teal: "#36b89f",
+  gray950: "#141824",
+  gray900: "#1f2433",
+  gray700: "#4a5168",
+  gray500: "#7d879e",
+  gray400: "#a3adc0",
+  gray300: "#cdd4e0",
+  gray200: "#e4e9f2",
+  gray100: "#f0f3f9",
+  gray50: "#f7f9fc",
+} as const;

@@ -18,16 +18,26 @@
   flex-shrink: 0;
 }
 
-.logo {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: $text-primary;
+.hoursLayout {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .topBarEnd {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.userBadge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-secondary;
+  padding: 0.35rem 0.65rem;
+  background: $bg-tertiary;
+  border-radius: $radius-full;
+  border: 1px solid $border-subtle;
 }
 
 .loadingMain {

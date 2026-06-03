@@ -1,0 +1,95 @@
+@use "@/styles/variables" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: $bg-modal-overlay;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: $z-modal;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: $bg-elevated;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: $shadow-lg;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid $border;
+
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-sm;
+  color: $text-muted;
+  font-size: 1.25rem;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+}
+
+.textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  color: $text-primary;
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.cancel,
+.save {
+  padding: 0.5rem 1rem;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+}
+
+.cancel {
+  color: $text-muted;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+}
+
+.save {
+  background: $accent;
+  color: $text-on-accent;
+  font-weight: 600;
+
+  &:hover {
+    background: $accent-hover;
+  }
+}

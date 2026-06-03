@@ -1,5 +1,6 @@
 import type { Task } from "@/types/task";
 import { formatDate } from "@/lib/formatDate";
+import { BRAND_COLORS } from "@/lib/brandColors";
 import { buildEmailFromLayout } from "./emailLayout";
 
 export function buildTaskAssignedEmail(input: {
@@ -36,8 +37,8 @@ export function buildTaskAssignedEmail(input: {
     ],
     ctaLabel: "לפתיחת המשימה",
     ctaUrl: input.taskUrl,
-    accent: "#5b8def",
-    accentSoft: "#7aa3f5",
+    accent: BRAND_COLORS.blue,
+    accentSoft: BRAND_COLORS.cyan,
     emoji: "👥",
     footerNote: "קיבלת מייל זה כי שויכת למשימה במערכת ניהול המשימות.",
     footerCentered: true,

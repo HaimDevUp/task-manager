@@ -46,11 +46,18 @@
   color: $text-secondary;
 }
 
+.passwordWrap {
+  position: relative;
+  display: block;
+}
+
 .input {
+  width: 100%;
   background: $bg-secondary;
   border: 1px solid $border;
   border-radius: $radius-md;
   padding: 0.75rem 1rem;
+  padding-inline-end: 2.75rem;
   color: $text-primary;
   font-size: 1rem;
   transition: border-color $transition-fast;
@@ -58,6 +65,36 @@
   &:focus {
     outline: none;
     border-color: $border-focus;
+  }
+}
+
+.toggleVisibility {
+  position: absolute;
+  inset-inline-end: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  color: $text-muted;
+  transition: color $transition-fast, background $transition-fast;
+
+  svg {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  &:hover {
+    color: $text-primary;
+    background: $bg-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $border-focus;
+    outline-offset: 2px;
   }
 }
 
@@ -69,7 +106,7 @@
 .submit {
   margin-top: 0.25rem;
   background: $accent;
-  color: #fff;
+  color: $text-on-accent;
   border-radius: $radius-md;
   padding: 0.8rem 1rem;
   font-size: 1rem;

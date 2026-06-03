@@ -32,16 +32,16 @@
 }
 
 .inProgress {
-  background: rgba(251, 191, 36, 0.15);
-  color: $warning;
+  background: $warning-muted;
+  color: $warning-strong;
 }
 
 .waiting {
-  background: rgba(154, 163, 184, 0.15);
+  background: rgba($gray-500, 0.12);
   color: $text-secondary;
 }
 
 .done {
-  background: rgba(74, 222, 128, 0.15);
+  background: $success-muted;
   color: $success;
 }

@@ -120,31 +120,6 @@
     background: $bg-elevated;
   }
 
-  &.dueWeek {
-    border-inline-start: 3px solid $warning;
-    background: rgba($warning, 0.08);
-
-    &:hover {
-      background: rgba($warning, 0.14);
-    }
-
-    &.selected {
-      background: rgba($warning, 0.18);
-    }
-  }
-
-  &.dueUrgent {
-    border-inline-start: 3px solid $danger;
-    background: rgba($danger, 0.1);
-
-    &:hover {
-      background: rgba($danger, 0.16);
-    }
-
-    &.selected {
-      background: rgba($danger, 0.2);
-    }
-  }
 }
 
 .dueMarker {
@@ -156,8 +131,9 @@
 }
 
 .dueMarkerWeek {
-  background: $warning;
-  box-shadow: 0 0 0 3px rgba($warning, 0.25);
+  background: $due-week;
+  box-shadow: 0 0 0 3px $due-week-muted;
+  animation: duePulse 1.5s ease-in-out infinite;
 }
 
 .dueMarkerUrgent {
@@ -220,7 +196,7 @@
   height: 52px;
   border-radius: $radius-full;
   background: $accent;
-  color: white;
+  color: $text-on-accent;
   font-size: 1.75rem;
   font-weight: 300;
   line-height: 1;

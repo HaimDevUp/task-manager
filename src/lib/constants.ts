@@ -7,4 +7,5 @@ export const SOCKET_EVENTS = {
 
 export const COLLECTIONS = {
   TASKS: "tasks",
+  WORK_TIMES: "work_times",
 } as const;

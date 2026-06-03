@@ -1,4 +1,5 @@
 import type { Task, CreateTaskInput, UpdateTaskInput } from "@/types/task";
+import type { WorkDayEntry, UpsertWorkDayInput } from "@/types/workTime";
 
 async function handleResponse<T>(res: Response): Promise<T> {
   const data = await res.json();
@@ -78,4 +79,33 @@ export async function notifyTask(
       body: JSON.stringify(input),
     })
   );
+}
+
+export async function fetchWorkDays(
+  employeeId: string,
+  year: number,
+  month: number
+): Promise<WorkDayEntry[]> {
+  const params = new URLSearchParams({
+    employeeId,
+    year: String(year),
+    month: String(month),
+  });
+  const data = await handleResponse<{ entries: WorkDayEntry[] }>(
+    await fetch(`/api/work-times?${params}`)
+  );
+  return data.entries;
+}
+
+export async function upsertWorkDay(
+  input: UpsertWorkDayInput
+): Promise<WorkDayEntry> {
+  const data = await handleResponse<{ entry: WorkDayEntry }>(
+    await fetch("/api/work-times", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    })
+  );
+  return data.entry;
 }

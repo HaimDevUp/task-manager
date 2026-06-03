@@ -130,7 +130,7 @@
 .submitBtn {
   padding: 0.65rem 1.5rem;
   background: $accent;
-  color: white;
+  color: $text-on-accent;
   border-radius: $radius-md;
   font-weight: 600;
   transition: background $transition-fast, transform $transition-fast;

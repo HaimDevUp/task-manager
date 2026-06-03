@@ -1,37 +1,87 @@
-// Dark theme palette
-$bg-primary: #0d0f14;
-$bg-secondary: #141820;
-$bg-tertiary: #1a1f2b;
-$bg-elevated: #222836;
-$bg-hover: #2a3142;
-$bg-modal-overlay: rgba(0, 0, 0, 0.65);
+// =============================================================================
+// Brand palette (מקור האמת)
+// =============================================================================
+$palette-mint: #42d2b2;
+$palette-cyan: #4bc8c8;
+$palette-indigo: #3a2fcd;
+$palette-white: #ffffff;
+$palette-coral: #db6b6b;
+$palette-green: #75bd6f;
+$palette-blue: #2c1ffc;
+$palette-teal: #36b89f;
 
-$text-primary: #f0f2f8;
-$text-secondary: #9aa3b8;
-$text-muted: #6b7289;
+// גווני אפור — טקסט, גבולות, משטחים
+$gray-950: #141824;
+$gray-900: #1f2433;
+$gray-800: #2d3348;
+$gray-700: #4a5168;
+$gray-600: #626a82;
+$gray-500: #7d879e;
+$gray-400: #a3adc0;
+$gray-300: #cdd4e0;
+$gray-200: #e4e9f2;
+$gray-100: #f0f3f9;
+$gray-50: #f7f9fc;
 
-$accent: #5b8def;
-$accent-hover: #7aa3f5;
-$accent-muted: rgba(91, 141, 239, 0.15);
+// =============================================================================
+// Semantic tokens (שימוש ברכיבים)
+// =============================================================================
 
-$danger: #ef5b6b;
-$danger-hover: #f57a87;
-$danger-muted: rgba(239, 91, 107, 0.15);
+// רקעים
+$bg-primary: $palette-white;
+$bg-secondary: $gray-100;
+$bg-tertiary: $gray-50;
+$bg-elevated: $palette-white;
+$bg-hover: $gray-200;
+$bg-modal-overlay: rgba($gray-950, 0.45);
 
-$success: #4ade80;
-$warning: #fbbf24;
+// טקסט
+$text-primary: $gray-900;
+$text-secondary: $gray-700;
+$text-muted: $gray-500;
+$text-on-accent: $palette-white;
 
-$border: rgba(255, 255, 255, 0.06);
-$border-focus: rgba(91, 141, 239, 0.5);
+// מותג / אינטראקציה
+$accent: $palette-blue;
+$accent-hover: $palette-indigo;
+$accent-secondary: $palette-cyan;
+$accent-tertiary: $palette-teal;
+$accent-muted: rgba($palette-blue, 0.1);
+$accent-muted-strong: rgba($palette-blue, 0.16);
+
+// סטטוס
+$danger: $palette-coral;
+$danger-hover: #e48484;
+$danger-muted: rgba($palette-coral, 0.12);
+
+$success: $palette-green;
+$success-muted: rgba($palette-green, 0.14);
+
+$warning: $palette-mint;
+$warning-strong: $palette-teal;
+$warning-muted: rgba($palette-mint, 0.2);
+
+$highlight: $palette-mint;
+$highlight-muted: rgba($palette-mint, 0.14);
+
+// דחיפות תאריך יעד
+$due-week: #e8b923;
+$due-week-muted: rgba($due-week, 0.35);
+
+// גבולות
+$border: $gray-300;
+$border-subtle: $gray-200;
+$border-focus: rgba($palette-blue, 0.45);
+
+// צללים (ערכת בהירה)
+$shadow-sm: 0 2px 8px rgba($gray-900, 0.06);
+$shadow-md: 0 8px 24px rgba($gray-900, 0.1);
+$shadow-lg: 0 16px 48px rgba($gray-900, 0.14);
 
 $radius-sm: 8px;
 $radius-md: 12px;
 $radius-lg: 16px;
 $radius-full: 9999px;
-
-$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-$shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
-$shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.45);
 
 $transition-fast: 150ms ease;
 $transition-base: 250ms ease;

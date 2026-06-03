@@ -7,7 +7,7 @@ export function AppToaster() {
     <Toaster
       dir="rtl"
       position="bottom-left"
-      theme="dark"
+      theme="light"
       richColors
       closeButton
       toastOptions={{

@@ -39,18 +39,12 @@ export function TaskListItem({
 
   const dueUrgency = getDueDateUrgency(task.dueDate);
   const dueUrgencyLabel = getDueDateUrgencyLabel(dueUrgency);
-  const dueUrgencyClass =
-    dueUrgency === "day" || dueUrgency === "overdue"
-      ? styles.dueUrgent
-      : dueUrgency === "week"
-        ? styles.dueWeek
-        : "";
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`${styles.item} ${dueUrgencyClass} ${isSelected ? styles.selected : ""} ${isDragging ? styles.dragging : ""}`}
+      className={`${styles.item} ${isSelected ? styles.selected : ""} ${isDragging ? styles.dragging : ""}`}
       title={dueUrgencyLabel ?? undefined}
     >
       {sortable && (

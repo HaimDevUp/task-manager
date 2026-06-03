@@ -1,0 +1,29 @@
+@use "@/styles/variables" as *;
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  background: $bg-tertiary;
+  padding: 0.25rem;
+  border-radius: $radius-md;
+
+  button {
+    padding: 0.45rem 1rem;
+    border-radius: $radius-sm;
+    color: $text-muted;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background $transition-fast, color $transition-fast;
+
+    &:hover {
+      color: $text-primary;
+      background: $bg-hover;
+    }
+
+    &.active {
+      background: $bg-elevated;
+      color: $accent;
+      box-shadow: $shadow-sm;
+    }
+  }
+}

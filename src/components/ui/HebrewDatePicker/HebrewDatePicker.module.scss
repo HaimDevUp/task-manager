@@ -79,7 +79,7 @@
 
   :global(.rdp-selected .rdp-day_button) {
     background: $accent;
-    color: white;
+    color: $text-on-accent;
   }
 
   :global(.rdp-today:not(.rdp-selected) .rdp-day_button) {

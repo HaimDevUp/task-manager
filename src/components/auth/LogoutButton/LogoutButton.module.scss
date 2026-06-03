@@ -11,7 +11,7 @@
   &:hover:not(:disabled) {
     color: $text-primary;
     background: $bg-hover;
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: $border;
   }
 
   &:disabled {

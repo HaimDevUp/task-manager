@@ -1,0 +1,105 @@
+@use "@/styles/variables" as *;
+
+.wrap {
+  position: relative;
+  width: 100%;
+  min-width: 130px;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border-radius: $radius-sm;
+  border: 1px solid transparent;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: right;
+  transition: box-shadow $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    border-color: $border;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px $border-focus;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  line-height: 1;
+  width: 1.1rem;
+  text-align: center;
+}
+
+.label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: transform $transition-fast;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  min-width: 100%;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: $bg-elevated;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-md;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.option,
+.optionSelected {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  border-radius: $radius-sm;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: right;
+  border: 1px solid transparent;
+  transition: filter $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    filter: brightness(0.97);
+    border-color: $border-subtle;
+  }
+}
+
+.optionSelected {
+  border-color: currentColor;
+}
+
+.selectedMark {
+  margin-inline-start: auto;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}

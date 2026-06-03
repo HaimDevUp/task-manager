@@ -64,7 +64,7 @@ select {
   transition: background $transition-fast;
 
   &:hover {
-    background: #3a4258;
+    background: $gray-400;
   }
 }
 

@@ -198,7 +198,7 @@
 .saveDescriptionBtn {
   padding: 0.5rem 1.25rem;
   background: $accent;
-  color: white;
+  color: $text-on-accent;
   border-radius: $radius-md;
   font-weight: 600;
   font-size: 0.85rem;
@@ -393,9 +393,9 @@
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  border: 1px solid #f7cd4f;
-  background: #fff3c2;
-  color: #8a5a00;
+  border: 1px solid $palette-mint;
+  background: $warning-muted;
+  color: $warning-strong;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -403,14 +403,14 @@
     box-shadow $transition-fast;
 
   &:hover:not(:disabled) {
-    background: #ffe89a;
+    background: $highlight-muted;
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(247, 205, 79, 0.35);
+    box-shadow: 0 4px 14px rgba($palette-mint, 0.35);
   }
 
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(247, 205, 79, 0.45);
+    box-shadow: 0 0 0 3px rgba($palette-mint, 0.45);
   }
 
   &:disabled {
@@ -439,7 +439,7 @@
   align-self: flex-start;
   padding: 0.5rem 1rem;
   background: $accent;
-  color: white;
+  color: $text-on-accent;
   border-radius: $radius-md;
   font-weight: 600;
   font-size: 0.85rem;
@@ -487,7 +487,7 @@
 
   &:hover:not(:disabled) {
     background: $danger;
-    color: white;
+    color: $text-on-accent;
     transform: translateY(-1px);
   }
 
@@ -504,7 +504,7 @@
 .confirmOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(7, 10, 20, 0.55);
+  background: $bg-modal-overlay;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -518,7 +518,7 @@
   border: 1px solid $border;
   border-radius: $radius-lg;
   padding: 1.1rem 1.1rem 1rem;
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.28);
+  box-shadow: $shadow-lg;
 }
 
 .confirmTitle {
@@ -558,7 +558,7 @@
   padding: 0.5rem 1rem;
   border-radius: $radius-md;
   background: $danger;
-  color: white;
+  color: $text-on-accent;
   transition: filter $transition-fast;
 
   &:hover:not(:disabled) {

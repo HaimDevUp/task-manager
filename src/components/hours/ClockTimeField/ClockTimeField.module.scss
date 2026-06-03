@@ -1,0 +1,46 @@
+@use "@/styles/variables" as *;
+
+.field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  min-height: 32px;
+  padding: 0.35rem 0.6rem;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  user-select: none;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $accent-muted;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $border-focus;
+    outline-offset: 2px;
+  }
+}
+
+.value {
+  color: $accent;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.placeholder {
+  color: $text-muted;
+  pointer-events: none;
+}
+
+.nativeInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+}

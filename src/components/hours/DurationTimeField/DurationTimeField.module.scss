@@ -1,0 +1,129 @@
+@use "@/styles/variables" as *;
+
+.wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 72px;
+  min-height: 32px;
+  padding: 0.35rem 0.6rem;
+  border-radius: $radius-sm;
+  border: 1px solid $border;
+  background: $bg-secondary;
+  cursor: pointer;
+  user-select: none;
+  transition: background $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    background: $bg-hover;
+    border-color: $border-focus;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $border-focus;
+    outline-offset: 2px;
+  }
+}
+
+.value {
+  color: $text-primary;
+  font-variant-numeric: tabular-nums;
+}
+
+.placeholder {
+  color: $text-muted;
+}
+
+.popover {
+  position: absolute;
+  z-index: 50;
+  top: 100%;
+  right: 0;
+  margin-top: 0.35rem;
+  background: $bg-elevated;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  padding: 0.75rem;
+  box-shadow: $shadow-md;
+  min-width: 220px;
+}
+
+.popoverTitle {
+  font-size: 0.8rem;
+  color: $text-secondary;
+  margin-bottom: 0.65rem;
+}
+
+.selects {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.35rem;
+  justify-content: center;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: $text-muted;
+  }
+}
+
+.colon {
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding-bottom: 0.45rem;
+  color: $text-secondary;
+}
+
+.select {
+  padding: 0.4rem 0.5rem;
+  border-radius: $radius-sm;
+  border: 1px solid $border;
+  background: $bg-secondary;
+  color: $text-primary;
+  font-size: 0.95rem;
+  min-width: 72px;
+
+  &:focus {
+    outline: none;
+    border-color: $border-focus;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  justify-content: flex-end;
+}
+
+.primary,
+.secondary {
+  padding: 0.35rem 0.75rem;
+  border-radius: $radius-sm;
+  font-size: 0.85rem;
+}
+
+.primary {
+  background: $accent;
+  color: $text-on-accent;
+
+  &:hover {
+    background: $accent-hover;
+  }
+}
+
+.secondary {
+  color: $text-muted;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+}
