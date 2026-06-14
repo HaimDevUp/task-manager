@@ -2,6 +2,8 @@
 
 import { FormEvent, ReactNode, useCallback, useEffect, useState } from "react";
 import { AuthProvider, type AuthState } from "@/contexts/AuthContext";
+import { ThemeToggle } from "@/components/ui/ThemeToggle/ThemeToggle";
+import { UpNextLogo } from "@/components/ui/UpNextLogo/UpNextLogo";
 import type { SessionUser } from "@/types/session";
 import styles from "./LoginGate.module.scss";
 
@@ -76,6 +78,9 @@ export function LoginGate({ children }: LoginGateProps) {
   if (!checked) {
     return (
       <div className={styles.screen}>
+        <div className={styles.themeBar}>
+          <ThemeToggle />
+        </div>
         <p className={styles.loading}>טוען...</p>
       </div>
     );
@@ -84,8 +89,11 @@ export function LoginGate({ children }: LoginGateProps) {
   if (!authState) {
     return (
       <div className={styles.screen}>
+        <div className={styles.themeBar}>
+          <ThemeToggle />
+        </div>
         <div className={styles.card}>
-          <h1 className={styles.title}>UpNext Manager</h1>
+          <UpNextLogo height={40} className={styles.logo} />
           <p className={styles.subtitle}>הזן סיסמה אישית כדי להמשיך</p>
           <form className={styles.form} onSubmit={handleSubmit}>
             <label className={styles.label}>

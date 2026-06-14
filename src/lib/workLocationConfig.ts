@@ -10,26 +10,26 @@ export interface WorkLocationStyle {
 export const WORK_LOCATION_STYLES: Record<WorkLocation, WorkLocationStyle> = {
   בית: {
     icon: "🏠",
-    background: "rgba(66, 210, 178, 0.22)",
-    color: "#2a9a82",
+    background: "rgba(250, 209, 163, 0.28)",
+    color: "#c9975a",
   },
   משרד: {
     icon: "🏢",
-    background: "rgba(44, 31, 252, 0.12)",
-    color: BRAND_COLORS.indigo,
+    background: "rgba(136, 150, 202, 0.2)",
+    color: BRAND_COLORS.periwinkle,
   },
   חוץ: {
     icon: "🌳",
-    background: "rgba(117, 189, 111, 0.22)",
-    color: "#4a8f45",
+    background: "rgba(244, 188, 117, 0.28)",
+    color: "#b8862e",
   },
 };
 
 export const WORK_LOCATION_PLACEHOLDER: WorkLocationStyle & { label: string } = {
   label: "בחר...",
   icon: "◎",
-  background: BRAND_COLORS.gray100,
-  color: BRAND_COLORS.gray500,
+  background: "var(--bg-secondary)",
+  color: "var(--text-muted)",
 };
 
 export function getWorkLocationStyle(

@@ -16,6 +16,24 @@
   background: $bg-secondary;
   border-bottom: 1px solid $border;
   flex-shrink: 0;
+  gap: 1rem;
+}
+
+.topBarStart {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.headerLogo {
+  display: none;
+}
+
+@media (min-width: $bp-mobile) {
+  .headerLogo {
+    display: block;
+  }
 }
 
 .hoursLayout {

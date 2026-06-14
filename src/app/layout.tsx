@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { AppProviders } from "@/components/providers/AppProviders";
+import { themeInitScript } from "@/lib/theme";
 import "@/styles/globals.scss";
 import styles from "./layout.module.scss";
 
@@ -13,8 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he" dir="rtl">
-      <body className={styles.body}>{children}</body>
+    <html lang="he" dir="rtl" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className={styles.body}>
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

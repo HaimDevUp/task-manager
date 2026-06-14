@@ -7,6 +7,14 @@
   justify-content: center;
   padding: 1.5rem;
   background: $bg-primary;
+  position: relative;
+}
+
+.themeBar {
+  position: fixed;
+  top: 1rem;
+  inset-inline-start: 1rem;
+  z-index: 10;
 }
 
 .card {
@@ -20,10 +28,8 @@
   animation: slideUp $transition-base forwards;
 }
 
-.title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-bottom: 0.35rem;
+.logo {
+  margin-bottom: 0.75rem;
 }
 
 .subtitle {

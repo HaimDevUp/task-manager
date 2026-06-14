@@ -104,7 +104,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba($bg-primary, 0.5);
+    background: $overlay-soft;
     z-index: 2;
     pointer-events: none;
   }

@@ -1,0 +1,60 @@
+@use "@/styles/variables" as *;
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem;
+}
+
+.track {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  border-radius: $radius-full;
+  background: $bg-tertiary;
+  border: 1px solid $border;
+  transition: background $transition-base, border-color $transition-base;
+}
+
+.trackDark {
+  background: rgba(198, 171, 195, 0.22);
+  border-color: rgba(136, 150, 202, 0.4);
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: $radius-full;
+  background: $bg-elevated;
+  border: 1px solid $border-subtle;
+  box-shadow: $shadow-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $accent;
+  transition: transform $transition-base, background $transition-base,
+    color $transition-base;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.trackDark .thumb {
+  transform: translateX(-24px);
+  color: $accent-hover;
+}
+
+.toggle:hover .track {
+  border-color: $border-focus;
+}
+
+.toggle:focus-visible {
+  outline: 2px solid $border-focus;
+  outline-offset: 2px;
+  border-radius: $radius-md;
+}

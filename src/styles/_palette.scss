@@ -1,0 +1,35 @@
+// =============================================================================
+// UpNext brand palette — מקור: לוגו SVG (גרדיאנט + ink)
+// =============================================================================
+$brand-periwinkle: #8896ca;
+$brand-lavender: #c6abc3;
+$brand-pink: #f8bdbe;
+$brand-peach: #fad1a3;
+$brand-golden: #f4bc75;
+$brand-orange: #f7a42b;
+$brand-ink: #2b2d42;
+$brand-white: #ffffff;
+
+// aliases לשימוש ב-rgba() ברכיבים קיימים
+$palette-blue: $brand-periwinkle;
+$palette-indigo: $brand-lavender;
+$palette-cyan: $brand-pink;
+$palette-mint: $brand-peach;
+$palette-teal: $brand-golden;
+$palette-coral: #e07a7a;
+$palette-green: $brand-golden;
+$palette-white: $brand-white;
+
+$gray-950: #1a1c2e;
+$gray-900: $brand-ink;
+$gray-800: #3a3d52;
+$gray-700: #4e5168;
+$gray-600: #656878;
+$gray-500: #828595;
+$gray-400: #a8aab8;
+$gray-300: #cdd0dc;
+$gray-200: #e4e6ef;
+$gray-100: #f2f3f8;
+$gray-50: #f8f9fc;
+
+$due-week: $brand-orange;

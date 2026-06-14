@@ -1,0 +1,9 @@
+.logo {
+  display: block;
+  flex-shrink: 0;
+}
+
+.wordmark {
+  fill: var(--logo-text);
+  transition: fill 250ms ease;
+}

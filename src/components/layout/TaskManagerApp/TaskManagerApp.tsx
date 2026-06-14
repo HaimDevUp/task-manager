@@ -15,6 +15,8 @@ import { TaskList } from "@/components/tasks/TaskList/TaskList";
 import { TaskDetail } from "@/components/tasks/TaskDetail/TaskDetail";
 import { CreateTaskModal } from "@/components/tasks/CreateTaskModal/CreateTaskModal";
 import { LogoutButton } from "@/components/auth/LogoutButton/LogoutButton";
+import { ThemeToggle } from "@/components/ui/ThemeToggle/ThemeToggle";
+import { UpNextLogo } from "@/components/ui/UpNextLogo/UpNextLogo";
 import {
   AppModeTabs,
   type AppMode,
@@ -255,8 +257,12 @@ export function TaskManagerApp() {
   return (
     <div className={styles.app}>
       <header className={styles.topBar}>
-        <AppModeTabs mode={appMode} onChange={handleAppModeChange} />
+        <div className={styles.topBarStart}>
+          <UpNextLogo height={30} className={styles.headerLogo} />
+          <AppModeTabs mode={appMode} onChange={handleAppModeChange} />
+        </div>
         <div className={styles.topBarEnd}>
+          <ThemeToggle />
           <span className={styles.userBadge}>{user.name}</span>
           <LogoutButton />
           {appMode === "tasks" ? (

@@ -1,0 +1,116 @@
+@use "palette" as *;
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --logo-text: #{$brand-ink};
+
+  --bg-primary: #{$brand-white};
+  --bg-secondary: #{$gray-100};
+  --bg-tertiary: #{$gray-50};
+  --bg-elevated: #{$brand-white};
+  --bg-hover: #{$gray-200};
+  --bg-modal-overlay: rgba(43, 45, 66, 0.45);
+  --overlay-soft: rgba(255, 255, 255, 0.55);
+
+  --text-primary: #{$brand-ink};
+  --text-secondary: #{$gray-700};
+  --text-muted: #{$gray-500};
+  --text-on-accent: #{$brand-white};
+
+  --accent: #{$brand-periwinkle};
+  --accent-hover: #{$brand-lavender};
+  --accent-secondary: #{$brand-orange};
+  --accent-tertiary: #{$brand-golden};
+  --accent-muted: rgba(136, 150, 202, 0.14);
+  --accent-muted-strong: rgba(136, 150, 202, 0.22);
+
+  --danger: #e07a7a;
+  --danger-hover: #e89292;
+  --danger-muted: rgba(248, 189, 190, 0.35);
+  --danger-glow: rgba(224, 122, 122, 0.35);
+
+  --success: #{$brand-golden};
+  --success-muted: rgba(244, 188, 117, 0.28);
+
+  --warning: #{$brand-peach};
+  --warning-strong: #{$brand-orange};
+  --warning-muted: rgba(250, 209, 163, 0.35);
+
+  --highlight: #{$brand-peach};
+  --highlight-muted: rgba(250, 209, 163, 0.22);
+
+  --due-week: #{$brand-orange};
+  --due-week-muted: rgba(247, 164, 43, 0.32);
+
+  --waiting-badge-bg: rgba(130, 133, 149, 0.12);
+
+  --border: #{$gray-300};
+  --border-subtle: #{$gray-200};
+  --border-focus: rgba(136, 150, 202, 0.5);
+
+  --shadow-sm: 0 2px 8px rgba(43, 45, 66, 0.06);
+  --shadow-md: 0 8px 24px rgba(43, 45, 66, 0.1);
+  --shadow-lg: 0 16px 48px rgba(43, 45, 66, 0.14);
+
+  --scrollbar-thumb: #{$gray-200};
+  --scrollbar-thumb-hover: #{$gray-400};
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --logo-text: #{$gray-100};
+
+  --bg-primary: #{$brand-ink};
+  --bg-secondary: #{$gray-800};
+  --bg-tertiary: #323548;
+  --bg-elevated: #{$gray-800};
+  --bg-hover: #454860;
+  --bg-modal-overlay: rgba(0, 0, 0, 0.65);
+  --overlay-soft: rgba(43, 45, 66, 0.72);
+
+  --text-primary: #{$gray-100};
+  --text-secondary: #{$gray-400};
+  --text-muted: #{$gray-500};
+  --text-on-accent: #{$brand-ink};
+
+  --accent: #{$brand-lavender};
+  --accent-hover: #{$brand-pink};
+  --accent-secondary: #{$brand-orange};
+  --accent-tertiary: #{$brand-golden};
+  --accent-muted: rgba(198, 171, 195, 0.16);
+  --accent-muted-strong: rgba(198, 171, 195, 0.24);
+
+  --danger: #{$brand-pink};
+  --danger-hover: #fcd0d1;
+  --danger-muted: rgba(248, 189, 190, 0.16);
+  --danger-glow: rgba(248, 189, 190, 0.28);
+
+  --success: #{$brand-golden};
+  --success-muted: rgba(244, 188, 117, 0.18);
+
+  --warning: #{$brand-peach};
+  --warning-strong: #{$brand-orange};
+  --warning-muted: rgba(250, 209, 163, 0.14);
+
+  --highlight: #{$brand-peach};
+  --highlight-muted: rgba(250, 209, 163, 0.12);
+
+  --due-week: #{$brand-orange};
+  --due-week-muted: rgba(247, 164, 43, 0.24);
+
+  --waiting-badge-bg: rgba(168, 170, 184, 0.12);
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-focus: rgba(198, 171, 195, 0.45);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
+
+  --scrollbar-thumb: #{$gray-800};
+  --scrollbar-thumb-hover: #{$gray-700};
+}
