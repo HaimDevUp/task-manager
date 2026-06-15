@@ -1,5 +1,5 @@
 import { ARRIVAL_STATUSES, type ArrivalStatus } from "@/types/workTime";
-import { BRAND_COLORS } from "@/lib/brandColors";
+import { CHIP_THEMES, resolveChipStyle } from "@/lib/choiceChipColors";
 
 export interface ArrivalStatusStyle {
   icon: string;
@@ -7,42 +7,17 @@ export interface ArrivalStatusStyle {
   color: string;
 }
 
-export const ARRIVAL_STATUS_STYLES: Record<ArrivalStatus, ArrivalStatusStyle> = {
-  הגיע: {
-    icon: "✓",
-    background: "rgba(244, 188, 117, 0.28)",
-    color: "#b8862e",
-  },
-  חופש: {
-    icon: "🏖",
-    background: "rgba(136, 150, 202, 0.24)",
-    color: BRAND_COLORS.periwinkle,
-  },
-  "חצי יום חופש": {
-    icon: "🕐",
-    background: "rgba(247, 164, 43, 0.28)",
-    color: "#b8781f",
-  },
-  מחלה: {
-    icon: "🤒",
-    background: "rgba(248, 189, 190, 0.32)",
-    color: "#c96a6b",
-  },
-  חג: {
-    icon: "✦",
-    background: "rgba(198, 171, 195, 0.24)",
-    color: BRAND_COLORS.lavender,
-  },
-  "ערב חג": {
-    icon: "🌙",
-    background: "rgba(250, 209, 163, 0.28)",
-    color: "#c9975a",
-  },
-  היעדרות: {
-    icon: "⊘",
-    background: "rgba(130, 133, 149, 0.18)",
-    color: BRAND_COLORS.gray700,
-  },
+const ARRIVAL_STATUS_THEMES: Record<
+  ArrivalStatus,
+  { icon: string; theme: keyof typeof CHIP_THEMES }
+> = {
+  הגיע: { icon: "✓", theme: "golden" },
+  חופש: { icon: "🏖", theme: "periwinkle" },
+  "חצי יום חופש": { icon: "🕐", theme: "orange" },
+  מחלה: { icon: "🤒", theme: "pink" },
+  חג: { icon: "✦", theme: "lavender" },
+  "ערב חג": { icon: "🌙", theme: "peach" },
+  היעדרות: { icon: "⊘", theme: "neutral" },
 };
 
 export const ARRIVAL_STATUS_PLACEHOLDER: ArrivalStatusStyle & { label: string } =
@@ -54,10 +29,19 @@ export const ARRIVAL_STATUS_PLACEHOLDER: ArrivalStatusStyle & { label: string } 
   };
 
 export function getArrivalStatusStyle(
-  status: ArrivalStatus | null
+  status: ArrivalStatus | null,
+  isDark = false
 ): ArrivalStatusStyle & { label: string } {
   if (!status) return ARRIVAL_STATUS_PLACEHOLDER;
-  return { ...ARRIVAL_STATUS_STYLES[status], label: status };
+
+  const entry = ARRIVAL_STATUS_THEMES[status];
+  const chip = resolveChipStyle(CHIP_THEMES[entry.theme], isDark);
+
+  return {
+    icon: entry.icon,
+    label: status,
+    ...chip,
+  };
 }
 
 export { ARRIVAL_STATUSES };

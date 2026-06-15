@@ -1,5 +1,5 @@
 import { WORK_LOCATIONS, type WorkLocation } from "@/types/workTime";
-import { BRAND_COLORS } from "@/lib/brandColors";
+import { CHIP_THEMES, resolveChipStyle } from "@/lib/choiceChipColors";
 
 export interface WorkLocationStyle {
   icon: string;
@@ -7,22 +7,13 @@ export interface WorkLocationStyle {
   color: string;
 }
 
-export const WORK_LOCATION_STYLES: Record<WorkLocation, WorkLocationStyle> = {
-  בית: {
-    icon: "🏠",
-    background: "rgba(250, 209, 163, 0.28)",
-    color: "#c9975a",
-  },
-  משרד: {
-    icon: "🏢",
-    background: "rgba(136, 150, 202, 0.2)",
-    color: BRAND_COLORS.periwinkle,
-  },
-  חוץ: {
-    icon: "🌳",
-    background: "rgba(244, 188, 117, 0.28)",
-    color: "#b8862e",
-  },
+const WORK_LOCATION_THEMES: Record<
+  WorkLocation,
+  { icon: string; theme: keyof typeof CHIP_THEMES }
+> = {
+  בית: { icon: "🏠", theme: "peach" },
+  משרד: { icon: "🏢", theme: "periwinkle" },
+  חוץ: { icon: "🌳", theme: "golden" },
 };
 
 export const WORK_LOCATION_PLACEHOLDER: WorkLocationStyle & { label: string } = {
@@ -33,10 +24,19 @@ export const WORK_LOCATION_PLACEHOLDER: WorkLocationStyle & { label: string } = 
 };
 
 export function getWorkLocationStyle(
-  location: WorkLocation | null
+  location: WorkLocation | null,
+  isDark = false
 ): WorkLocationStyle & { label: string } {
   if (!location) return WORK_LOCATION_PLACEHOLDER;
-  return { ...WORK_LOCATION_STYLES[location], label: location };
+
+  const entry = WORK_LOCATION_THEMES[location];
+  const chip = resolveChipStyle(CHIP_THEMES[entry.theme], isDark);
+
+  return {
+    icon: entry.icon,
+    label: location,
+    ...chip,
+  };
 }
 
 export { WORK_LOCATIONS };

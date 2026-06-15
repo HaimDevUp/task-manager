@@ -66,12 +66,13 @@
   margin: 0;
   padding: 0.35rem;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
   background: $bg-elevated;
   border: 1px solid $border;
   border-radius: $radius-md;
   box-shadow: $shadow-md;
-  max-height: 280px;
-  overflow-y: auto;
 }
 
 .option,
@@ -89,7 +90,7 @@
   transition: filter $transition-fast, border-color $transition-fast;
 
   &:hover {
-    filter: brightness(0.97);
+    filter: brightness(1.04);
     border-color: $border-subtle;
   }
 }

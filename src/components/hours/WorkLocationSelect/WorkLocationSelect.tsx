@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 import type { WorkLocation } from "@/types/workTime";
 import {
   WORK_LOCATIONS,
@@ -15,9 +16,10 @@ interface WorkLocationSelectProps {
 }
 
 export function WorkLocationSelect({ value, onChange }: WorkLocationSelectProps) {
+  const { isDark } = useTheme();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const current = getWorkLocationStyle(value);
+  const current = getWorkLocationStyle(value, isDark);
 
   useEffect(() => {
     if (!open) return;
@@ -105,7 +107,7 @@ export function WorkLocationSelect({ value, onChange }: WorkLocationSelectProps)
             </button>
           </li>
           {WORK_LOCATIONS.map((location) => {
-            const opt = getWorkLocationStyle(location);
+            const opt = getWorkLocationStyle(location, isDark);
             const isSelected = location === value;
 
             return (

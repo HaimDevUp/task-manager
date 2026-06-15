@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 import type { ArrivalStatus } from "@/types/workTime";
 import {
   ARRIVAL_STATUSES,
@@ -18,9 +19,10 @@ export function ArrivalStatusSelect({
   value,
   onChange,
 }: ArrivalStatusSelectProps) {
+  const { isDark } = useTheme();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const current = getArrivalStatusStyle(value);
+  const current = getArrivalStatusStyle(value, isDark);
 
   useEffect(() => {
     if (!open) return;
@@ -106,7 +108,7 @@ export function ArrivalStatusSelect({
             </button>
           </li>
           {ARRIVAL_STATUSES.map((status) => {
-            const opt = getArrivalStatusStyle(status);
+            const opt = getArrivalStatusStyle(status, isDark);
             const isSelected = status === value;
 
             return (
